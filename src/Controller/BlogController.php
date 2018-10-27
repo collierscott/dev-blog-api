@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\BlogPost;
+use App\Repository\BlogPostRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,36 +18,25 @@ class BlogController extends AbstractController
 {
     private $em;
     private $serializer;
+    private $postRepository;
 
-    private const POSTS = [
-        [
-            "id" => 1,
-            "slug" => "hello-world",
-            "title" => "Hello World"
-        ],
-        [
-            "id" => 2,
-            "slug" => "hello-world-two",
-            "title" => "Hello World Two"
-        ],
-        [
-            "id" => 3,
-            "slug" => "hello-world-three",
-            "title" => "Hello World Three"
-        ]
-    ];
-    public function __construct(EntityManagerInterface $em, SerializerInterface $serializer)
+    public function __construct(EntityManagerInterface $em, SerializerInterface $serializer, BlogPostRepository $postRepository)
     {
         $this->em = $em;
         $this->serializer = $serializer;
+        $this->postRepository = $postRepository;
     }
 
     /**
      * @Route(path="/{page}", name="blog_list", defaults={"page": 1}, requirements={"page"="\d+"})
+     * @param $page
+     * @param Request $request
+     * @return JsonResponse
      */
     public function list($page, Request $request)
     {
         $limit = $request->get('limit', 10);
+        $posts = $this->postRepository->findAll();
 
         return $this->json(
             [
@@ -54,8 +44,9 @@ class BlogController extends AbstractController
                 'limit' => $limit,
                 "data" => array_map(
                     function($item) {
-                        return $this->generateUrl('blog_post_by_id', ['id' => $item['id']]);
-                    }, self::POSTS
+                        /** @var BlogPost $item */
+                        return $this->generateUrl('blog_post_by_slug', ['slug' => $item->getSlug()]);
+                    }, $posts
                 )
             ],
             200
@@ -67,8 +58,9 @@ class BlogController extends AbstractController
      */
     public function post($id)
     {
+        $post = $this->postRepository->find($id);
         return $this->json(
-            self::POSTS[array_search($id, array_column(self::POSTS, 'id'))]
+            $post
         );
     }
 
@@ -77,8 +69,9 @@ class BlogController extends AbstractController
      */
     public function postBySlug($slug)
     {
+        $post = $this->postRepository->findOneBy(['slug' => $slug]);
         return $this->json(
-            self::POSTS[array_search($slug, array_column(self::POSTS, 'slug'))]
+            $post
         );
     }
 
