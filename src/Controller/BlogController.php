@@ -55,10 +55,13 @@ class BlogController extends AbstractController
 
     /**
      * @Route(path="/post/{id}", name="blog_post_by_id", requirements={"id"="\d+"})
+     * @param BlogPost $post
+     * @return JsonResponse
+     *
+     * Can also use ParamConverter("post", class="App:BlogPost") with '@' symbol if don't type specify parameter.
      */
-    public function post($id)
+    public function post(BlogPost $post)
     {
-        $post = $this->postRepository->find($id);
         return $this->json(
             $post
         );
@@ -66,10 +69,14 @@ class BlogController extends AbstractController
 
     /**
      * @Route(path="/post/{slug}", name="blog_post_by_slug")
+     * @param BlogPost $post
+     * @return JsonResponse
+     *
+     * Can also use ParamConverter("post", class="App:BlogPost", options={"mapping": {"slug": "slug}})
+     *     with '@' symbol if don't type specify parameter.
      */
-    public function postBySlug($slug)
+    public function postBySlug(BlogPost $post)
     {
-        $post = $this->postRepository->findOneBy(['slug' => $slug]);
         return $this->json(
             $post
         );
