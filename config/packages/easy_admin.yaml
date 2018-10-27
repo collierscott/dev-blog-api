@@ -7,3 +7,4 @@
 easy_admin:
   entities:
     - App\Entity\BlogPost
+    - App\Entity\Comment
