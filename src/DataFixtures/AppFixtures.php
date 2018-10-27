@@ -67,6 +67,7 @@ class AppFixtures extends Fixture
                 $comment = new Comment();
                 $comment->setContent($this->faker->realText())
                     ->setPublishedAt($this->faker->dateTimeThisYear)
+                    ->setPost($this->getReference("blog_post_$i"))
                     ->setAuthor($user);
 
                 $this->setReference("comment_$i", $comment);
