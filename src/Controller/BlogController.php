@@ -98,7 +98,7 @@ class BlogController extends AbstractController
         $this->em->flush();
         return $this->json(
           $post,
-          Response::HTTP_OK
+          Response::HTTP_CREATED
         );
     }
 
