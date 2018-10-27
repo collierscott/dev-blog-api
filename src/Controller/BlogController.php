@@ -7,8 +7,9 @@ use App\Repository\BlogPostRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
 use  Symfony\Component\Serializer\SerializerInterface;
 
 /**
@@ -54,7 +55,7 @@ class BlogController extends AbstractController
     }
 
     /**
-     * @Route(path="/post/{id}", name="blog_post_by_id", requirements={"id"="\d+"})
+     * @Route(path="/post/{id}", name="blog_post_by_id", requirements={"id"="\d+"}, methods={"GET"})
      * @param BlogPost $post
      * @return JsonResponse
      *
@@ -63,12 +64,13 @@ class BlogController extends AbstractController
     public function post(BlogPost $post)
     {
         return $this->json(
-            $post
+            $post,
+            Response::HTTP_OK
         );
     }
 
     /**
-     * @Route(path="/post/{slug}", name="blog_post_by_slug")
+     * @Route(path="/post/{slug}", name="blog_post_by_slug", methods={"GET"})
      * @param BlogPost $post
      * @return JsonResponse
      *
@@ -78,7 +80,8 @@ class BlogController extends AbstractController
     public function postBySlug(BlogPost $post)
     {
         return $this->json(
-            $post
+            $post,
+            Response::HTTP_OK
         );
     }
 
@@ -95,7 +98,23 @@ class BlogController extends AbstractController
         $this->em->flush();
         return $this->json(
           $post,
-          200
+          Response::HTTP_OK
+        );
+    }
+
+    /**
+     * @param BlogPost $post
+     *
+     * @Route(path="/post/{id}", name="blog_post_delete_by_id", requirements={"id"="\d+"}, methods={"DELETE"})
+     * @return JsonResponse
+     */
+    public function delete(BlogPost $post)
+    {
+        $this->em->remove($post);
+        $this->em->flush();
+        return $this->json(
+            null,
+            Response::HTTP_NO_CONTENT
         );
     }
 }
