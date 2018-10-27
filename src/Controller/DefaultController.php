@@ -16,7 +16,7 @@ class DefaultController extends AbstractController
      */
     public function index()
     {
-        return new JsonResponse([
+        return $this->json([
             'action' => 'index',
             'time' => time()
         ]);
