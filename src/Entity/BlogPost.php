@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ApiResource(
  *     itemOperations={"get"},
- *     collectionOperations={"get"}
+ *     collectionOperations={"get", "post"}
  * )
  * @ORM\Entity(repositoryClass="App\Repository\BlogPostRepository")
  */
