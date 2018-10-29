@@ -40,14 +40,12 @@ class AppFixtures extends Fixture
 
     public function loadBlogPosts(ObjectManager $manager)
     {
-        /** @var User $user */
-        $user = $this->getReference('admin');
-
         for($i = 0; $i < 100; $i++) {
+            $id = rand(0, 9);
             $post = new BlogPost();
             $post->setTitle($this->faker->realText(30));
             $post->setSlug($this->faker->slug);
-            $post->setAuthor($user);
+            $post->setAuthor($this->getReference("user_$id"));
             $post->setPublishedAt($this->faker->dateTimeThisYear);
             $post->setContent($this->faker->realText());
 
@@ -59,16 +57,14 @@ class AppFixtures extends Fixture
 
     public function loadComments(ObjectManager $manager)
     {
-        /** @var User $user */
-        $user = $this->getReference('admin');
-
         for($i = 0; $i < 100; $i++) {
             for($j = 0; $j < rand(1, 10); $j++) {
+                $id = rand(0, 9);
                 $comment = new Comment();
                 $comment->setContent($this->faker->realText())
                     ->setPublishedAt($this->faker->dateTimeThisYear)
                     ->setPost($this->getReference("blog_post_$i"))
-                    ->setAuthor($user);
+                    ->setAuthor($this->getReference("user_$id"));
 
                 $this->setReference("comment_$i", $comment);
 
@@ -79,15 +75,16 @@ class AppFixtures extends Fixture
 
     public function loadUsers(ObjectManager $manager)
     {
-        $user = new User();
-        $user->setEmail($this->faker->email)
-            ->setName($this->faker->firstName . " " . $this->faker->lastName)
-            ->setUsername($this->faker->userName)
-            ->setPassword($this->encoder->encodePassword($user, "passWord1"));
+        for($i = 0; $i < 10; $i++) {
+            $user = new User();
+            $user->setEmail($this->faker->email)
+                ->setName($this->faker->firstName . " " . $this->faker->lastName)
+                ->setUsername($this->faker->userName)
+                ->setPassword($this->encoder->encodePassword($user, "passWord1"));
 
-        $this->addReference('admin', $user);
+            $this->addReference("user_$i", $user);
 
-        $manager->persist($user);
-        $manager->flush();
+            $manager->persist($user);
+        }
     }
 }
