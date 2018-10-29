@@ -45,7 +45,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @UniqueEntity("username", message="That username is already in use.")
  * @UniqueEntity("email", message="That email address is already taken.")
  *
- * NOTE: two contexts
+ * NOTE: Contexts
  *     normalizationContext: When data is sent back to client
  *     denormalizationContext: When data is sent/accepted from the client
  */
