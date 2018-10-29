@@ -4,7 +4,6 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
-use App\EventSubscriber\AuthoredEntitySubscriber;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -22,10 +21,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  *             }
  *           },
  *          "put"={
- *              "access_control"="is_granted('IS_AUTHENTICATED_FULLY') and object.getAuthor() == user",
+ *              "access_control"="is_granted('ROLE_EDITOR') or (is_granted('ROLE_WRITER') and object.getAuthor() == user)"
  *          },
  *          "delete"={
- *              "access_control"="is_granted('IS_AUTHENTICATED_FULLY') and object.getAuthor() == user",
+ *              "access_control"="is_granted('ROLE_EDITOR') or (is_granted('ROLE_WRITER') and object.getAuthor() == user)"
  *          }
  *     },
  *     collectionOperations={
@@ -35,7 +34,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *             }
  *           },
  *          "post"={
- *              "access_control"="is_granted('IS_AUTHENTICATED_FULLY')"
+ *              "access_control"="is_granted('ROLE_WRITER')"
  *          }
  *     },
  *     denormalizationContext={

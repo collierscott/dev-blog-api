@@ -47,8 +47,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @UniqueEntity("email", message="That email address is already taken.")
  *
  * NOTE: Contexts
- *     normalizationContext: When data is sent back to client
- *     denormalizationContext: When data is sent/accepted from the client
+ *     normalizationContext: When data is sent back to client (reading)
+ *     denormalizationContext: When data is sent/accepted from the client (writing)
  */
 class User implements UserInterface
 {
@@ -118,7 +118,6 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"post", "put"})
      * @Assert\NotBlank()
      * @Assert\Email()
      * @Assert\Length(min="6", max="255")

@@ -17,16 +17,16 @@ use Symfony\Component\Validator\Constraints as Assert;
  *             }
  *           },
  *          "put"={
- *              "access_control"="is_granted('IS_AUTHENTICATED_FULLY') and object.getAuthor() == user",
+ *              "access_control"="is_granted('ROLE_EDITOR') or (is_granted('ROLE_COMMENTATOR') and object.getAuthor() == user)",
  *          },
  *          "delete"={
- *              "access_control"="is_granted('IS_AUTHENTICATED_FULLY') and object.getAuthor() == user",
+ *              "access_control"="is_granted('ROLE_EDITOR') or (is_granted('ROLE_COMMENTATOR') and object.getAuthor() == user)",
  *          }
  *     },
  *     collectionOperations={
  *          "get",
  *          "post"={
- *              "access_control"="is_granted('IS_AUTHENTICATED_FULLY')"
+ *              "access_control"="is_granted('ROLE_COMMENTATOR')"
  *          },
  *         "api_blog_posts_comments_get_subresource"={
  *             "normalization_context"={
