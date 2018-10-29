@@ -83,7 +83,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="json")
      */
-    private $roles = self::DEFAULT_ROLES;
+    private $roles;
 
     /**
      * @var string The hashed password
@@ -142,7 +142,7 @@ class User implements UserInterface
     {
         $this->comments = new ArrayCollection();
         $this->posts = new ArrayCollection();
-        $this->roles[] = self::DEFAULT_ROLES;
+        $this->roles = self::DEFAULT_ROLES;
     }
 
     public function getId(): ?int
@@ -163,6 +163,15 @@ class User implements UserInterface
     public function setUsername(string $username): self
     {
         $this->username = $username;
+
+        return $this;
+    }
+
+    public function addRole(string $role): self
+    {
+        if(!in_array($role, $this->roles)) {
+            $this->roles[] = $role;
+        }
 
         return $this;
     }

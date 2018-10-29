@@ -77,13 +77,32 @@ class AppFixtures extends Fixture
 
     public function loadUsers(ObjectManager $manager)
     {
+        $roles = [
+            User::ROLE_COMMENTATOR,
+            User::ROLE_WRITER,
+            User::ROLE_EDITOR,
+            User::ROLE_ADMIN,
+            User::ROLE_SUPER_ADMIN
+        ];
+
+        $roleidx = 0;
+
         for($i = 0; $i < 10; $i++) {
             $user = new User();
+
             $username = str_replace('.', '_', $this->faker->userName);
             $user->setEmail($this->faker->email)
                 ->setName($this->faker->firstName . " " . $this->faker->lastName)
                 ->setUsername($username)
                 ->setPassword($this->encoder->encodePassword($user, "passWord1"));
+
+            if($roleidx >= count($roles)) {
+                $roleidx = 0;
+            }
+
+            $role = $roles[$roleidx];
+            $user->setRoles([$role]);
+            $roleidx++;
 
             $this->addReference("user_$i", $user);
 
