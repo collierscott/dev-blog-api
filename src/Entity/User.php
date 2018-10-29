@@ -13,15 +13,41 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ApiResource(
- *     itemOperations={"get"},
- *     collectionOperations={"post"},
- *     normalizationContext={
- *         "groups"={"read"}
+ *     itemOperations={
+ *         "get"={
+ *             "access_control"="is_granted('IS_AUTHENTICATED_FULLY')",
+ *             "normalization_context"={
+ *                 "groups"={"get"}
+ *             }
+ *         },
+ *         "put"={
+ *              "access_control"="is_granted('IS_AUTHENTICATED_FULLY') and object == user",
+ *              "denormalization_context"={
+ *                  "groups"={"put"}
+ *              },
+ *              "normalization_context"={
+ *                 "groups"={"get"}
+ *             }
+ *         },
+ *     },
+ *     collectionOperations={
+ *          "post"={
+ *              "denormalization_context"={
+ *                  "groups"={"post"}
+ *              },
+ *              "normalization_context"={
+ *                 "groups"={"get"}
+ *             }
+ *          }
  *     }
  * )
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @UniqueEntity("username", message="That username is already in use.")
  * @UniqueEntity("email", message="That email address is already taken.")
+ *
+ * NOTE: Contexts
+ *     normalizationContext: When data is sent back to client
+ *     denormalizationContext: When data is sent/accepted from the client
  */
 class User implements UserInterface
 {
@@ -29,13 +55,13 @@ class User implements UserInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups("read")
+     * @Groups({"get"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
-     * @Groups("read")
+     * @Groups({"get", "post"})
      * @Assert\NotBlank()
      * @Assert\Length(min="3", max="180")
      * @Assert\Regex(
@@ -53,6 +79,7 @@ class User implements UserInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
+     * @Groups({"put", "post"})
      * @Assert\Regex(
      *     pattern="/^(?=.*[a-z])(?=.*[A-Z])(?!.*\s).{7,}$/",
      *     message="Password must be at least 7 characters long and contain at least one digit, one upper case character, and one lower case letter."
@@ -63,6 +90,7 @@ class User implements UserInterface
     /**
      * @var string
      *
+     * @Groups({"put", "post"})
      * @Assert\NotBlank()
      * @Assert\Expression(
      *     "this.getPassword() === this.getVerifiedPassword()",
@@ -73,7 +101,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups("read")
+     * @Groups({"get", "post", "put"})
      * @Assert\NotBlank()
      * @Assert\Length(min="5", max="255")
      */
@@ -81,6 +109,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"post", "put"})
      * @Assert\NotBlank()
      * @Assert\Email()
      * @Assert\Length(min="6", max="255")
@@ -89,13 +118,13 @@ class User implements UserInterface
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="author")
-     * @Groups("read")
+     * @Groups({"get"})
      */
     private $comments;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\BlogPost", mappedBy="author")
-     * @Groups("read")
+     * @Groups({"get"})
      */
     private $posts;
 
