@@ -11,7 +11,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ApiResource(
  *     itemOperations={
- *          "get",
+ *          "get"={
+ *             "normalization_context"={
+ *                 "groups"={"get-comment-with-author"}
+ *             }
+ *           },
  *          "put"={
  *              "access_control"="is_granted('IS_AUTHENTICATED_FULLY') and object.getAuthor() == user",
  *          },
