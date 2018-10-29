@@ -23,7 +23,12 @@ use Symfony\Component\Validator\Constraints as Assert;
  *          "get",
  *          "post"={
  *              "access_control"="is_granted('IS_AUTHENTICATED_FULLY')"
- *          }
+ *          },
+ *         "api_blog_posts_comments_get_subresource"={
+ *             "normalization_context"={
+ *                 "groups"={"get-comment-with-author"}
+ *             }
+ *         }
  *     },
  *     denormalizationContext={
  *          "groups"={"post"}
@@ -37,12 +42,13 @@ class Comment implements AuthoredEntityInterface, PublishedDateEntityInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"get-comment-with-author"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"post"})
+     * @Groups({"get-comment-with-author", "post"})
      * @Assert\NotBlank()
      * @Assert\Length(min="3", max="3000")
      */
@@ -50,12 +56,14 @@ class Comment implements AuthoredEntityInterface, PublishedDateEntityInterface
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"get-comment-with-author"})
      */
     private $publishedAt;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="comments")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"get-comment-with-author"})
      */
     private $author;
 
