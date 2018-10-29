@@ -58,11 +58,15 @@ class AppFixtures extends Fixture
     {
         for($i = 0; $i < 100; $i++) {
             for($j = 0; $j < rand(1, 10); $j++) {
+                /** @var BlogPost $post */
+                $post = $this->getReference("blog_post_$i");
                 $comment = new Comment();
                 $comment->setContent($this->faker->realText())
-                    ->setPublishedAt($this->faker->dateTimeThisYear)
-                    ->setPost($this->getReference("blog_post_$i"))
-                    ->setAuthor($this->getRandomUser());
+                    ->setPost($post);
+                $comment->setAuthor($this->getRandomUser());
+                $comment->setPublishedAt($this->faker->dateTimeThisYear);
+
+
 
                 $this->setReference("comment_$i", $comment);
 
@@ -89,6 +93,8 @@ class AppFixtures extends Fixture
 
     private function getRandomUser() : User
     {
-        return $this->getReference('user_' . rand(0, 9));
+        /** @var User $user */
+        $user = $this->getReference('user_' . rand(0, 9));
+        return $user;
     }
 }
