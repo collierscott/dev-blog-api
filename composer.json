@@ -20,7 +20,8 @@
         "doctrine/doctrine-fixtures-bundle": "^3.0",
         "fzaninotto/faker": "^1.8",
         "symfony/dotenv": "*",
-        "symfony/maker-bundle": "^1.8"
+        "symfony/maker-bundle": "^1.8",
+        "symfony/web-server-bundle": "*"
     },
     "config": {
         "preferred-install": {

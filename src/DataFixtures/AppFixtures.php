@@ -83,7 +83,7 @@ class AppFixtures extends Fixture
         $user->setEmail($this->faker->email)
             ->setName($this->faker->firstName . " " . $this->faker->lastName)
             ->setUsername($this->faker->userName)
-            ->setPassword($this->encoder->encodePassword($user, "password"));
+            ->setPassword($this->encoder->encodePassword($user, "passWord1"));
 
         $this->addReference('admin', $user);
 
