@@ -52,6 +52,14 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class User implements UserInterface
 {
+    const ROLE_COMMENTATOR = 'ROLE_COMMENTATOR';
+    const ROLE_WRITER = 'ROLE_WRITER';
+    const ROLE_EDITOR = 'ROLE_EDITOR';
+    const ROLE_ADMIN = 'ROLE_ADMIN';
+    const ROLE_SUPER_ADMIN = 'ROLE_SUPER_ADMIN';
+
+    const DEFAULT_ROLES = [self::ROLE_COMMENTATOR];
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -75,7 +83,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="json")
      */
-    private $roles = [];
+    private $roles = self::DEFAULT_ROLES;
 
     /**
      * @var string The hashed password
@@ -134,7 +142,7 @@ class User implements UserInterface
     {
         $this->comments = new ArrayCollection();
         $this->posts = new ArrayCollection();
-        $this->roles[] = 'ROLE_USER';
+        $this->roles[] = self::DEFAULT_ROLES;
     }
 
     public function getId(): ?int
@@ -165,9 +173,6 @@ class User implements UserInterface
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
-
         return array_unique($roles);
     }
 
