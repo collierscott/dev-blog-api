@@ -31,9 +31,10 @@ class Mailer
     }
 
     public function sendConfirmationEmail(User $user){
+
         try {
             $body = $this->twig->render(
-                ':email:confirmation.html.twig',
+                'email/confirmation.html.twig',
                 [
                     'user' => $user,
                 ]
@@ -44,10 +45,10 @@ class Mailer
         }
 
         // Send email here
-        $message = (new \Swift_Message('Hello from API platform 2'))
+        $message = (new \Swift_Message('Please confirm your account'))
             ->setFrom('api-platform@gmail.com')
             ->setTo($user->getEmail())
-            ->setBody($body);
+            ->setBody($body, 'text/html');
         $this->mailer->send($message);
     }
 }
