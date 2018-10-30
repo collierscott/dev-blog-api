@@ -26,6 +26,7 @@ security:
                 authenticators:
                     # - lexik_jwt_authentication.jwt_token_authenticator
                     - App\Security\TokenAuthenticator
+            user_checker: App\Security\UserEnabledChecker
 
         main:
             anonymous: true
