@@ -5,6 +5,7 @@ namespace App\DataFixtures;
 use App\Entity\BlogPost;
 use App\Entity\Comment;
 use App\Entity\User;
+use App\Security\TokenGenerator;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Faker\Factory;
@@ -18,10 +19,16 @@ class AppFixtures extends Fixture
     /** @var Factory $faker */
     private $faker;
 
-    public function __construct(UserPasswordEncoderInterface $encoder)
+    private $tokenGenerator;
+
+    public function __construct(
+        UserPasswordEncoderInterface $encoder,
+        TokenGenerator $tokenGenerator
+    )
     {
         $this->encoder = $encoder;
         $this->faker = Factory::create();
+        $this->tokenGenerator = $tokenGenerator;
     }
 
     /**
@@ -95,6 +102,11 @@ class AppFixtures extends Fixture
                 ->setPassword($this->encoder->encodePassword($user, "passWord1"));
 
             $user->setEnabled(true);
+
+            if(0 !== $i && 0 === $i % 4) {
+                $user->setEnabled(false);
+                $user->setConfirmationToken($this->tokenGenerator->getRandomSecureToken());
+            }
 
             if($roleidx >= count($roles)) {
                 $roleidx = 0;
