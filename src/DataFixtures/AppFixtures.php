@@ -94,6 +94,8 @@ class AppFixtures extends Fixture
                 ->setUsername($username)
                 ->setPassword($this->encoder->encodePassword($user, "passWord1"));
 
+            $user->setEnabled(true);
+
             if($roleidx >= count($roles)) {
                 $roleidx = 0;
             }
