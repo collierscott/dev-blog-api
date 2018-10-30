@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Controller\ResetPasswordAction;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -9,6 +10,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -30,6 +32,16 @@ use Symfony\Component\Validator\Constraints as Assert;
  *                 "groups"={"get"}
  *             }
  *         },
+ *        "put-reset-password"={
+ *              "access_control"="is_granted('IS_AUTHENTICATED_FULLY') and object == user",
+ *              "method"="PUT",
+ *              "path"="/users/{id}/reset-password",
+ *              "controller"=ResetPasswordAction::class,
+ *              "denormalization_context"={
+ *                  "groups"={"put-reset-password"}
+ *              },
+ *             "validation_groups"={"put-reset-password"}
+ *         }
  *     },
  *     collectionOperations={
  *          "post"={
@@ -43,8 +55,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     }
  * )
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
- * @UniqueEntity("username", message="That username is already in use.")
- * @UniqueEntity("email", message="That email address is already taken.")
+ * @UniqueEntity("username", message="That username is already in use.", groups={"post"})
+ * @UniqueEntity("email", message="That email address is already taken.", groups={"post"})
  *
  * NOTE: Contexts
  *     normalizationContext: When data is sent back to client (reading)
@@ -90,6 +102,7 @@ class User implements UserInterface
      * @var string The hashed password
      * @ORM\Column(type="string")
      * @Groups({"put", "post"})
+     * @Assert\NotBlank()
      * @Assert\Regex(
      *     pattern="/^(?=.*[a-z])(?=.*[A-Z])(?!.*\s).{7,}$/",
      *     message="Password must be at least 7 characters long and contain at least one digit, one upper case character, and one lower case letter."
@@ -100,7 +113,7 @@ class User implements UserInterface
     /**
      * @var string
      *
-     * @Groups({"put", "post"})
+     * @Groups({"post"})
      * @Assert\NotBlank()
      * @Assert\Expression(
      *     "this.getPassword() === this.getVerifiedPassword()",
@@ -108,6 +121,41 @@ class User implements UserInterface
      * )
      */
     private $verifiedPassword;
+
+    /**
+     * @var string $newPassword
+     *
+     * @Groups({"put-reset-password"})
+     * @Assert\NotBlank(groups={"put-reset-password"})
+     * @Assert\Regex(
+     *     pattern="/^(?=.*[a-z])(?=.*[A-Z])(?!.*\s).{7,}$/",
+     *     message="Password must be at least 7 characters long and contain at least one digit, one upper case character, and one lower case letter.",
+     *     groups={"put-reset-password"}
+     * )
+     */
+    private $newPassword;
+
+    /**
+     * @var string $newVerifiedPassword
+     *
+     * @Groups({"put-reset-password"})
+     * @Assert\NotBlank(groups={"put-reset-password"})
+     * @Assert\Expression(
+     *     "this.getNewPassword() === this.getNewVerifiedPassword()",
+     *     message="Passwords do not match.",
+     *     groups={"put-reset-password"}
+     * )
+     */
+    private $newVerifiedPassword;
+
+    /**
+     * @var string $oldPassword
+     *
+     * @Groups({"put-reset-password"})
+     * @Assert\NotBlank(groups={"put-reset-password"})
+     * @UserPassword(groups={"put-reset-password"})
+     */
+    private $oldPassword;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -222,6 +270,39 @@ class User implements UserInterface
     public function setVerifiedPassword(string $verifiedPassword): void
     {
         $this->verifiedPassword = $verifiedPassword;
+    }
+
+    public function getNewPassword(): ?string
+    {
+        return $this->newPassword;
+    }
+
+
+    public function setNewPassword(string $newPassword): void
+    {
+        $this->newPassword = $newPassword;
+    }
+
+    public function getNewVerifiedPassword(): ?string
+    {
+        return $this->newVerifiedPassword;
+    }
+
+
+    public function setNewVerifiedPassword(string $newVerifiedPassword): void
+    {
+        $this->newVerifiedPassword = $newVerifiedPassword;
+    }
+
+
+    public function getOldPassword(): ?string
+    {
+        return $this->oldPassword;
+    }
+
+    public function setOldPassword(string $oldPassword): void
+    {
+        $this->oldPassword = $oldPassword;
     }
 
     /**
