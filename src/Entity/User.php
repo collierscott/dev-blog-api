@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -46,11 +47,19 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @UniqueEntity("email", message="That email address is already taken.")
  *
  * NOTE: Contexts
- *     normalizationContext: When data is sent back to client
- *     denormalizationContext: When data is sent/accepted from the client
+ *     normalizationContext: When data is sent back to client (reading)
+ *     denormalizationContext: When data is sent/accepted from the client (writing)
  */
 class User implements UserInterface
 {
+    const ROLE_COMMENTATOR = 'ROLE_COMMENTATOR';
+    const ROLE_WRITER = 'ROLE_WRITER';
+    const ROLE_EDITOR = 'ROLE_EDITOR';
+    const ROLE_ADMIN = 'ROLE_ADMIN';
+    const ROLE_SUPER_ADMIN = 'ROLE_SUPER_ADMIN';
+
+    const DEFAULT_ROLES = [self::ROLE_COMMENTATOR];
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -61,7 +70,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
-     * @Groups({"get", "post"})
+     * @Groups({"get", "post", "get-comment-with-author", "get-blog-post-with-author"})
      * @Assert\NotBlank()
      * @Assert\Length(min="3", max="180")
      * @Assert\Regex(
@@ -73,8 +82,9 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="json")
+     * @Groups({"get-admin", "get-owner"})
      */
-    private $roles = [];
+    private $roles;
 
     /**
      * @var string The hashed password
@@ -101,7 +111,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"get", "post", "put"})
+     * @Groups({"get", "post", "put", "get-comment-with-author", "get-blog-post-with-author"})
      * @Assert\NotBlank()
      * @Assert\Length(min="5", max="255")
      */
@@ -109,7 +119,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"post", "put"})
+     * @Groups({"post", "put", "get-admin", "get-owner"})
      * @Assert\NotBlank()
      * @Assert\Email()
      * @Assert\Length(min="6", max="255")
@@ -125,6 +135,7 @@ class User implements UserInterface
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\BlogPost", mappedBy="author")
      * @Groups({"get"})
+     * @ApiSubresource()
      */
     private $posts;
 
@@ -132,7 +143,7 @@ class User implements UserInterface
     {
         $this->comments = new ArrayCollection();
         $this->posts = new ArrayCollection();
-        $this->roles[] = 'ROLE_USER';
+        $this->roles = self::DEFAULT_ROLES;
     }
 
     public function getId(): ?int
@@ -157,15 +168,21 @@ class User implements UserInterface
         return $this;
     }
 
+    public function addRole(string $role): self
+    {
+        if(!in_array($role, $this->roles)) {
+            $this->roles[] = $role;
+        }
+
+        return $this;
+    }
+
     /**
      * @see UserInterface
      */
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
-
         return array_unique($roles);
     }
 
