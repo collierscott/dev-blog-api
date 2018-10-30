@@ -3,13 +3,11 @@
 namespace App\EventSubscriber;
 
 use ApiPlatform\Core\EventListener\EventPriorities;
-use App\Repository\UserRepository;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Security\UserConfirmationService;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
@@ -18,19 +16,15 @@ use Symfony\Component\HttpKernel\KernelEvents;
 class UserConfirmationSubscriber implements EventSubscriberInterface
 {
 
-    /** @var UserRepository  */
-    private $userRepository;
+    /** @var UserConfirmationService $userConfirmationService  */
+    private $userConfirmationService;
 
-    /** @var EntityManagerInterface */
-    private $manaager;
 
     public function __construct(
-        UserRepository $userRepository,
-        EntityManagerInterface $manager
+        UserConfirmationService $userConfirmationService
     )
     {
-        $this->userRepository = $userRepository;
-        $this->manaager = $manager;
+        $this->userConfirmationService = $userConfirmationService;
     }
 
     /**
@@ -67,19 +61,9 @@ class UserConfirmationSubscriber implements EventSubscriberInterface
         }
 
         $confirmationToken = $event->getControllerResult();
-
-        /** @var \App\Entity\User $user */
-        $user = $this->userRepository->findOneBy(
-            ['confirmationToken' => $confirmationToken->confirmationToken]
+        $this->userConfirmationService->confirmUser(
+            $confirmationToken->confirmationToken
         );
-
-        if(!$user) {
-            throw new NotFoundHttpException();
-        }
-
-        $user->setEnabled(true);
-        $user->setConfirmationToken(null);
-        $this->manaager->flush();
 
         $event->setResponse(new JsonResponse(
             null, Response::HTTP_OK
