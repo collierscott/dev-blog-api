@@ -9,7 +9,6 @@ use App\Entity\User;
  */
 class Mailer
 {
-
     /**
      * @var \Swift_Mailer
      */
@@ -30,8 +29,8 @@ class Mailer
         $this->twig = $twig;
     }
 
-    public function sendConfirmationEmail(User $user){
-
+    public function sendConfirmationEmail(User $user)
+    {
         try {
             $body = $this->twig->render(
                 'email/confirmation.html.twig',
