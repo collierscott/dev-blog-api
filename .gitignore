@@ -17,3 +17,7 @@
 ###< symfony/web-server-bundle ###
 
 public/images
+###> symfony/phpunit-bridge ###
+.phpunit
+/phpunit.xml
+###< symfony/phpunit-bridge ###
