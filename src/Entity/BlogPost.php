@@ -61,6 +61,11 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     }
  * )
  * @ApiResource(
+ *     attributes={
+ *         "order"={"publishedAt": "DESC"},
+ *         "pagination_enabled" = true,
+ *         "pagination_client_enabled" = true
+ *     },
  *     itemOperations={
  *          "get"={
  *             "normalization_context"={
