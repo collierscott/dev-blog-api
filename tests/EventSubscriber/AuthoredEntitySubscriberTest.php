@@ -56,9 +56,12 @@ class AuthoredEntitySubscriberTest extends TestCase
     {
         return [
             [BlogPost::class, true, 'POST'],
+            [BlogPost::class, false, 'PUT'],
             [BlogPost::class, false, 'GET'],
             ['NonExisting', false, 'POST'],
-            [Comment::class, true, 'POST']
+            [Comment::class, true, 'POST'],
+            [Comment::class, false, 'PUT'],
+            [Comment::class, false, 'GET']
         ];
     }
 
