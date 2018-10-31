@@ -15,3 +15,6 @@ api_platform:
             client_items_per_page: true
             items_per_page_parameter_name: itemsPerPage
             maximum_items_per_page: 100
+            partial: false               # Can increase performance if true
+            client_partial: true
+            partial_parameter_name: 'partial'
