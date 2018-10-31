@@ -17,7 +17,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     itemOperations={
  *          "get"={
  *             "normalization_context"={
- *                 "groups"={"get-blog-post-with-author", "get-image"}
+ *                 "groups"={"get-blog-post-with-author", "get-blog-post-with-image"}
  *             }
  *           },
  *          "put"={
@@ -30,7 +30,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     collectionOperations={
  *          "get"={
  *             "normalization_context"={
- *                 "groups"={"get-blog-post-with-author", "get-image"}
+ *                 "groups"={"get-blog-post-with-author", "get-blog-post-with-image"}
  *             }
  *           },
  *          "post"={
@@ -104,7 +104,7 @@ class BlogPost implements AuthoredEntityInterface, PublishedDateEntityInterface
      * @ORM\ManyToMany(targetEntity="App\Entity\Image")
      * @ORM\JoinTable()
      * @ApiSubresource()
-     * @Groups({"post", "get-image"})
+     * @Groups({"post", "get-blog-post-with-image"})
      */
     private $images;
 
