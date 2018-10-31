@@ -17,7 +17,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     itemOperations={
  *          "get"={
  *             "normalization_context"={
- *                 "groups"={"get-blog-post-with-author"}
+ *                 "groups"={"get-blog-post-with-author", "get-blog-post-with-image"}
  *             }
  *           },
  *          "put"={
@@ -30,7 +30,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     collectionOperations={
  *          "get"={
  *             "normalization_context"={
- *                 "groups"={"get-blog-post-with-author"}
+ *                 "groups"={"get-blog-post-with-author", "get-blog-post-with-image"}
  *             }
  *           },
  *          "post"={
@@ -93,14 +93,25 @@ class BlogPost implements AuthoredEntityInterface, PublishedDateEntityInterface
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="post")
-     * @Groups({"get-blog-post-with-author"})
      * @ApiSubresource()
+     * @Groups({"get-blog-post-with-author"})
      */
     private $comments;
+
+    /**
+     * @var Collection $images
+     *
+     * @ORM\ManyToMany(targetEntity="App\Entity\Image")
+     * @ORM\JoinTable()
+     * @ApiSubresource()
+     * @Groups({"post", "get-blog-post-with-image"})
+     */
+    private $images;
 
     public function __construct()
     {
         $this->comments = new ArrayCollection();
+        $this->images = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -207,5 +218,31 @@ class BlogPost implements AuthoredEntityInterface, PublishedDateEntityInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getImages(): Collection
+    {
+        return $this->images;
+    }
+
+    /**
+     * @param Collection $images
+     */
+    public function setImages(Collection $images
+    ): void {
+        $this->images = $images;
+    }
+
+    public function addImage(Image $image)
+    {
+        $this->images->add($image);
+    }
+
+    public function removeImage(Image $image)
+    {
+        $this->images->removeElement($image);
     }
 }
