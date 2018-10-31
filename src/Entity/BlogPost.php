@@ -6,6 +6,7 @@ use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -23,7 +24,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  *         "id": "exact",
  *         "title": "partial",
  *         "content": "partial",
- *         "author": "exact"
+ *         "author": "exact",
+ *         "author.name": "partial",
+ *         "author.username": "exact"
  *     }
  * )
  * @ApiFilter(
@@ -37,6 +40,16 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     properties={
  *         "id"
  *     }
+ * )
+ * @ApiFilter(
+ *     OrderFilter::class,
+ *     properties={
+ *         "id",
+ *         "publishedAt",
+ *         "title",
+ *         "author.name"
+ *     },
+ *     arguments={"orderParameterName"="_order"}
  * )
  * @ApiResource(
  *     itemOperations={
