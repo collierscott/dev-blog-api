@@ -10,6 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ApiResource(
+ *     attributes={"order"={"publishedAt": "DESC"}},
  *     itemOperations={
  *          "get"={
  *             "normalization_context"={
