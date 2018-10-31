@@ -6,7 +6,12 @@
 #        - App\Entity\User
 easy_admin:
   entities:
-    - App\Entity\BlogPost
-    - App\Entity\Comment
-    - App\Entity\User
-    - App\Entity\Image
+    BlogPost:
+       class: App\Entity\BlogPost
+    Comment:
+        class: App\Entity\Comment
+    User:
+      class: App\Entity\User
+      controller: App\Controller\UserAdminController
+    Image:
+        class: App\Entity\Image
