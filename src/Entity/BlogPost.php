@@ -17,7 +17,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     itemOperations={
  *          "get"={
  *             "normalization_context"={
- *                 "groups"={"get-blog-post-with-author"}
+ *                 "groups"={"get-blog-post-with-author", "get-image"}
  *             }
  *           },
  *          "put"={
