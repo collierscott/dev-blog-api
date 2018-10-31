@@ -6,6 +6,28 @@
 #        - App\Entity\User
 easy_admin:
   entities:
-    - App\Entity\BlogPost
-    - App\Entity\Comment
-    - App\Entity\User
+    BlogPost:
+       class: App\Entity\BlogPost
+       list:
+           actions: [{ name: 'Show'}]
+       show:
+           fields:
+               - id
+               - title
+               - publishedAt
+               - { property: 'comments', template: 'comments.html.twig' }
+               - images
+    Comment:
+        class: App\Entity\Comment
+    User:
+      class: App\Entity\User
+      controller: App\Controller\UserAdminController
+    Image:
+        class: App\Entity\Image
+        list:
+            fields:
+                - id
+                - { property: 'url', type: 'image', label: 'Image' }
+        form:
+            fields:
+                - { property: 'file', type: 'Vich\UploaderBundle\Form\Type\VichFileType' }

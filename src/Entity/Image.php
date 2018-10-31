@@ -53,7 +53,7 @@ class Image
     /**
      * @return int
      */
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -85,8 +85,13 @@ class Image
     /**
      * @param string $url
      */
-    public function setUrl(string $url): void
+    public function setUrl(?string $url): void
     {
         $this->url = $url;
+    }
+
+    public function __toString(): string
+    {
+        return $this->id . ':' . $this->url;
     }
 }
