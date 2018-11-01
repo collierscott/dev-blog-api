@@ -105,8 +105,8 @@ class FeatureContext extends \Behatch\Context\RestContext
     public function prepareImages()
     {
         copy(
-            __DIR__.'/../fixtures/kim-jong.jpg',
-            __DIR__.'/../fixtures/files/kim-jong.jpg'
+            __DIR__.'/../fixtures/kimjong.jpg',
+            __DIR__.'/../fixtures/files/kimjong.jpg'
         );
     }
 }

@@ -13,7 +13,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity
  * @Vich\Uploadable()
  * @ApiResource(
- *    attributes={"order"={"id": "DESC"}},
+ *    attributes={
+ *     "order"={"id": "DESC"},
+ *     "formats"={"json", "jsonld", "form"={"multipart/form-data"}}
+ *    },
  *    collectionOperations={
  *        "get",
  *        "post"={
