@@ -1,0 +1,28 @@
+
+###> symfony/framework-bundle ###
+/.env
+/.env.test
+/public/bundles/
+/var/
+/vendor/
+###< symfony/framework-bundle ###
+
+.idea
+
+###> lexik/jwt-authentication-bundle ###
+/config/jwt/*.pem
+###< lexik/jwt-authentication-bundle ###
+
+###> symfony/web-server-bundle ###
+/.web-server-pid
+###< symfony/web-server-bundle ###
+
+public/images
+###> symfony/phpunit-bridge ###
+.phpunit
+/phpunit.xml
+###< symfony/phpunit-bridge ###
+
+###> behat/symfony2-extension ###
+behat.yml
+###< behat/symfony2-extension ###
