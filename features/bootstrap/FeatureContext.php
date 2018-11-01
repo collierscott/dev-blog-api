@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
+use Doctrine\ORM\Tools\ToolsException;
 
 class FeatureContext extends \Behatch\Context\RestContext
 {
@@ -69,6 +70,8 @@ class FeatureContext extends \Behatch\Context\RestContext
     {
         $actual = $this->request->getContent();
 
+        var_dump($actual);
+
         $this->assertTrue(
             $this->matcher->match($actual, $json->getRaw())
         );
@@ -76,7 +79,7 @@ class FeatureContext extends \Behatch\Context\RestContext
 
     /**
      * @BeforeScenario @createSchema
-     * @throws \Doctrine\ORM\Tools\ToolsException
+     * @throws ToolsException
      */
     public function createSchema()
     {
@@ -94,5 +97,16 @@ class FeatureContext extends \Behatch\Context\RestContext
         $fixturesExecutor->execute([
             $this->fixtures
         ]);
+    }
+
+    /**
+     * @BeforeScenario @image
+     */
+    public function prepareImages()
+    {
+        copy(
+            __DIR__.'/../fixtures/kim-jong.jpg',
+            __DIR__.'/../fixtures/files/kim-jong.jpg'
+        );
     }
 }

@@ -124,7 +124,7 @@ class AppFixtures extends Fixture
         $user = new User();
         $username = 'admin';
         $user->setEmail($this->faker->email)
-            ->setName($this->faker->firstName . " " . $this->faker->lastName)
+            ->setName("Scott Collier")
             ->setUsername($username)
             ->setPassword($this->encoder->encodePassword($user, "passWord1"));
 
