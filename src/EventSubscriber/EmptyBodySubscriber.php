@@ -35,7 +35,6 @@ class EmptyBodySubscriber implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-
         return [
             KernelEvents::REQUEST => [
                 'handleEmptyBody', EventPriorities::POST_DESERIALIZE
