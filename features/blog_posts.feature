@@ -25,7 +25,7 @@ Feature: Manage blog posts
     "publishedAt": "@string@.isDateTime()",
     "content": "The content is suppose to be at least 20 characters",
     "slug": "a-new-slug",
-    "author": "@string@",
+    "author": "/api/users/11",
     "comments": [],
     "images": []
 }
