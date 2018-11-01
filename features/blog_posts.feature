@@ -18,14 +18,14 @@ Feature: Manage blog posts
     """
     {
     "@context": "/api/contexts/BlogPost",
-    "@id": "/api/blog_posts/101",
+    "@id": "@string@",
     "@type": "BlogPost",
-    "id": 101,
+    "id": @integer@,
     "title": "Hello a title",
-    "publishedAt": "2018-10-31T14:54:05+00:00",
+    "publishedAt": "@string@.isDateTime()",
     "content": "The content is suppose to be at least 20 characters",
     "slug": "a-new-slug",
-    "author": "/api/users/11",
+    "author": "@string@",
     "comments": [],
     "images": []
 }

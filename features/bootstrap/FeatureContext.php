@@ -68,7 +68,7 @@ class FeatureContext extends \Behatch\Context\RestContext
     public function theJsonMatchesExpectedTemplate(PyStringNode $json)
     {
         $actual = $this->request->getContent();
-        
+
         $this->assertTrue(
             $this->matcher->match($actual, $json->getRaw())
         );
