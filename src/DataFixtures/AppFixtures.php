@@ -120,6 +120,17 @@ class AppFixtures extends Fixture
 
             $manager->persist($user);
         }
+
+        $user = new User();
+        $username = 'admin';
+        $user->setEmail($this->faker->email)
+            ->setName("Scott Collier")
+            ->setUsername($username)
+            ->setPassword($this->encoder->encodePassword($user, "passWord1"));
+
+        $user->setEnabled(true);
+        $user->setRoles(["ROLE_ADMIN"]);
+        $manager->persist($user);
     }
 
     private function getRandomUserReference($entity) : User
