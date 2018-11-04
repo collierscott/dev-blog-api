@@ -55,8 +55,8 @@ use App\Controller\ResetPasswordAction;
  *     },
  * )
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
- * @UniqueEntity("username", errorPath="username", groups={"post", "put"})
- * @UniqueEntity("email", groups={"post", "put"})
+ * @UniqueEntity("username", errorPath="username", groups={"post", "put"}, message="A user with that username already exists.")
+ * @UniqueEntity("email", errorPath="email", groups={"post", "put"}, message="A user with that email already exists.")
  */
 class User implements UserInterface
 {
