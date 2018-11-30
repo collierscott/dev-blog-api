@@ -1,6 +1,6 @@
 # dev-blog-api
 
-A blogging app using API Platform and ReactJS. This project is still a pre-production release.
+A blogging app using [API Platform](https://api-platform.com/) and [ReactJS](https://reactjs.org/). This project is still a pre-production release.
 
 ## Getting Started
 
